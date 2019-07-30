@@ -1,0 +1,60 @@
+# Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+#
+# The MySQL  Client configuration file.
+#
+# For explanations see
+# http://dev.mysql.com/doc/mysql/en/server-system-variables.html
+
+[client]
+default-character-set = utf8mb4
+
+[mysqld]
+max_connections = 1024
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_bin
+init_connect = 'set collation_connection = utf8mb4_bin; set names utf8mb4 collate utf8mb4_bin;'
+transaction-isolation = READ-COMMITTED
+performance_schema = ON
+expire_logs_days = 7
+max_binlog_size = 100M
+binlog_format = ROW
+binlog_error_action = ABORT_SERVER
+sync_binlog = 0
+sql_mode = STRICT_ALL_TABLES
+binlog_cache_size = 128M
+binlog_stmt_cache_size = 128M
+enforce_gtid_consistency = ON
+gtid_mode = ON
+log_bin = mysql-bin
+master_info_repository = TABLE
+relay_log_info_repository = TABLE
+relay_log_recovery = ON
+transaction_write_set_extraction = XXHASH64
+log_slave_updates = ON
+#log_error = /var/lib/mysql/error.log
+group_replication_bootstrap_group = OFF
+group_replication_start_on_boot = OFF
+group_replication = FORCE_PLUS_PERMANENT
+group_replication_allow_local_disjoint_gtids_join = ON
+
+plugin-load = group_replication.so
+
+# can't disable due to mysql_upgrade failing
+#disabled_storage_engines = MYISAM,BLACKHOLE,FEDERATED,CSV,ARCHIVE
+[mysql]
+default-character-set = utf8mb4
