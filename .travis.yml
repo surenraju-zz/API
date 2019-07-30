@@ -11,3 +11,12 @@ cache:
   directories:
   - $HOME/.m2
   - $HOME/.gradle
+  
+services:
+  - docker
+
+script:
+  - mvn clean install 
+
+before_install:
+  - docker build -t surenraju/api-service api-service
