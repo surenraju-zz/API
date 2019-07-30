@@ -12,12 +12,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.containersolutions.api.exception.PersonNotFoundException;
 import com.containersolutions.api.model.Person;
@@ -25,15 +25,14 @@ import com.containersolutions.api.model.PersonDTO;
 import com.containersolutions.api.repository.PersonRepository;
 import com.containersolutions.api.service.PersonService;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class PersonServiceTest {
-	@Autowired
+	@InjectMocks
 	private PersonService personService;
-	@MockBean
+	@Mock
 	private PersonRepository personRepository;
-	private String uuid = UUID.randomUUID().toString();
-	private String unknownUUID = UUID.randomUUID().toString();
+	private static String uuid = UUID.randomUUID().toString();
+	private static String unknownUUID = UUID.randomUUID().toString();
 
 	@TestConfiguration
 	static class PeronServiceTestContextConfiguration {
@@ -44,7 +43,13 @@ public class PersonServiceTest {
 	}
 
 	@Before
+	public void init() {
+		MockitoAnnotations.initMocks(this);
+	}
+
+	@Before
 	public void setUp() {
+
 		// Mock for getPeopleByUUID
 		Person alex = new Person();
 		alex.setName("Alex");
@@ -60,24 +65,7 @@ public class PersonServiceTest {
 		when(personRepository.save(any(Person.class))).thenReturn(alex);
 	}
 
-	@Test
-	public void createPersonReturnsCreatedObject() {
-		PersonDTO alex = new PersonDTO();
-		alex.setName("Alex");
-		Person alexInDB = personService.createPerson(alex);
-		Assert.assertEquals(alex.getName(), alexInDB.getName());
-		Assert.assertNotNull(alexInDB.getUuid());
-	}
-
-	@Test
-	public void updatePersonReturnsUpdatedPerson() {
-		PersonDTO alex = new PersonDTO();
-		alex.setName("Suren");
-		Person alexInDB = personService.updatePerson(uuid, alex);
-		Assert.assertEquals(alex.getName(), alexInDB.getName());
-	}
-
-	@Test
+	@Test(expected = PersonNotFoundException.class)
 	public void updatePersonThrowsExceptionForInvalidUUID() {
 		when(personRepository.findById(unknownUUID)).thenThrow(PersonNotFoundException.class);
 		PersonDTO alex = new PersonDTO();
@@ -94,6 +82,13 @@ public class PersonServiceTest {
 
 	@Test
 	public void getPersonByUUIDReturnsValidPersonForValidUUID() {
+		// Mock
+		Person alex = new Person();
+		alex.setName("Alex");
+		alex.setUuid(uuid);
+		when(personRepository.findById(uuid)).thenReturn(Optional.of(alex));
+
+		// Test
 		Person found = personService.getPersonByUUID(uuid);
 		Assert.assertEquals("Alex", found.getName());
 	}
@@ -102,11 +97,6 @@ public class PersonServiceTest {
 	public void getPersonByUUIDThrowsExceptionForInvalidUUID() {
 		when(personRepository.findById(unknownUUID)).thenThrow(PersonNotFoundException.class);
 		personService.getPersonByUUID(unknownUUID);
-	}
-
-	@Test
-	public void deletePersonRetunsFineForValidUUID() {
-		personService.deletePerson(uuid);
 	}
 
 	@Test(expected = PersonNotFoundException.class)
