@@ -47,27 +47,8 @@ public class PersonServiceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@Before
-	public void setUp() {
-
-		// Mock for getPeopleByUUID
-		Person alex = new Person();
-		alex.setName("Alex");
-		alex.setUuid(uuid);
-		when(personRepository.findById(uuid)).thenReturn(Optional.of(alex));
-
-		// Mock for getPeople
-		List<Person> people = new ArrayList<>();
-		people.add(alex);
-		when(personRepository.findAll()).thenReturn(people);
-
-		// Mock for updates
-		when(personRepository.save(any(Person.class))).thenReturn(alex);
-	}
-
 	@Test(expected = PersonNotFoundException.class)
 	public void updatePersonThrowsExceptionForInvalidUUID() {
-		when(personRepository.findById(unknownUUID)).thenThrow(PersonNotFoundException.class);
 		PersonDTO alex = new PersonDTO();
 		alex.setName("Suren");
 		Person alexInDB = personService.updatePerson(uuid, alex);
@@ -76,6 +57,15 @@ public class PersonServiceTest {
 
 	@Test
 	public void getPeopleReturnOnePerson() {
+		// Mock for getPeople
+		Person alex = new Person();
+		alex.setName("Alex");
+		alex.setUuid(uuid);
+		List<Person> mockPeople = new ArrayList<>();
+		mockPeople.add(alex);
+		when(personRepository.findAll()).thenReturn(mockPeople);
+
+		// Test
 		List<Person> people = personService.getPeople();
 		Assert.assertEquals(1, people.size());
 	}
