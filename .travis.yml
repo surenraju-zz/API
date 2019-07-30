@@ -19,4 +19,5 @@ script:
   - mvn clean install 
 
 before_install:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t surenraju/api-service api-service
