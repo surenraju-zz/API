@@ -1,0 +1,5 @@
+FROM mysql:5.7.19
+MAINTAINER suren.1988@gmail.com
+
+ADD ["/mysql-service/src/main/resources/conf.d/mysql.cnf", "/etc/mysql/conf.d/conf_mysql.cnf"]
+ADD ["/mysql-service/src/main/resources/docker-entrypoint-initdb.d/", "/docker-entrypoint-initdb.d"]

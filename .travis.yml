@@ -29,6 +29,10 @@ script:
   - docker build -f $TRAVIS_BUILD_DIR/Dockerfile.init-service -t $IMAGE_NAME_INIT_SERVICE:$COMMIT $TRAVIS_BUILD_DIR
   - docker tag $IMAGE_NAME_INIT_SERVICE:$COMMIT $IMAGE_NAME_INIT_SERVICE:$TAG
   - docker push $IMAGE_NAME_INIT_SERVICE
+  - export IMAGE_NAME_MYSQL_SERVICE=surenraju/mysql-service
+  - docker build -f $TRAVIS_BUILD_DIR/Dockerfile.mysql-service -t $IMAGE_NAME_MYSQL_SERVICE:$COMMIT $TRAVIS_BUILD_DIR
+  - docker tag $IMAGE_NAME_MYSQL_SERVICE:$COMMIT $IMAGE_NAME_MYSQL_SERVICE:$TAG
+  - docker push $IMAGE_NAME_MYSQL_SERVICE
 
 after_success :
-    - echo Post build activities
+    - Post build activities

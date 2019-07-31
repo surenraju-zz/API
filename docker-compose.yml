@@ -1,0 +1,49 @@
+version: "3"
+
+networks:
+  default:
+    driver: bridge
+    
+services:
+  mysql-service:
+    image: surenraju/mysql-service
+    hostname: mysql
+    command: ["--server-id=1"]
+    environment:
+      - MYSQL_ROOT_PASSWORD=Pass1234
+    volumes:
+      - ${MYSQL_DATA_EXPORT_DIR}:/var/lib/mysql/:delegated
+    ports:
+      - "3306:3306"
+    networks:
+      default:
+        aliases:
+          - mysql-service
+          
+  api-service-dev:
+    build:
+      context: api-service
+      dockerfile: Dockerfile
+    environment: 
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/titanic
+      - SPRING_DATASOURCE_USERNAME=titanic
+      - SPRING_DATASOURCE_PASSWORD=Pass1234     
+    ports:
+      - "8080:8080"
+    networks:
+      default:
+        aliases:
+          - api-service-dev
+          
+  api-service:
+    image: surenraju/api-service
+    environment: 
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/titanic
+      - SPRING_DATASOURCE_USERNAME=titanic
+      - SPRING_DATASOURCE_PASSWORD=Pass1234    
+    ports:
+      - "8080:8080"
+    networks:
+      default:
+        aliases:
+          - api-service
