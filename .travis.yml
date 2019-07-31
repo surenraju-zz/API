@@ -1,10 +1,12 @@
+sudo: required
+services:
+  - docker
+  
 language: java
 # use Java 8
 jdk:
 - openjdk8
 
-# see https://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure
-sudo: false
 
 # cache the build tool's caches
 cache:
@@ -12,13 +14,13 @@ cache:
   - $HOME/.m2
   - $HOME/.gradle
   
-services:
-  - docker
-
 script:
   - mvn clean install 
 
-before_install:
-  - pwd
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t surenraju/api-service api-service
+after_success :
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - export IMAGE_NAME=surenraju/api-service
+  - docker build -t $IMAGE_NAME:$COMMIT ./api-service
+  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+  - docker push $IMAGE_NAME
