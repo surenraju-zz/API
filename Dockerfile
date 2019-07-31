@@ -8,5 +8,5 @@ RUN mvn clean install
 FROM openjdk:8-jre-alpine
 MAINTAINER suren.1988@gmail.com
 WORKDIR /app
-COPY --from=BUILD_IMAGE /usr/src/app/*.jar app.jar  
+COPY --from=BUILD_IMAGE /usr/src/app/api-service/target*.jar app.jar  
 CMD ["java","-Dspring.profiles.active=docker","-jar","app.jar"]

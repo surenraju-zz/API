@@ -18,12 +18,11 @@ cache:
   - $HOME/.gradle
   
 script: 
-  - mvn clean install 
-
-after_success :
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - export IMAGE_NAME=surenraju/api-service
   - docker build -t $IMAGE_NAME:$COMMIT $TRAVIS_BUILD_DIR
   - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+
+after_success :
   - docker push $IMAGE_NAME
