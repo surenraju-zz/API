@@ -7,6 +7,9 @@ language: java
 jdk:
 - openjdk8
 
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::7}
 
 # cache the build tool's caches
 cache:
@@ -25,6 +28,7 @@ after_success :
   - echo $TRAVIS_BUILD_DIR
   - echo $TAG
   - echo $IMAGE_NAME
-  - docker build -t $IMAGE_NAME:$COMMIT .
+  - echo $COMMIT
+  - docker build -t $IMAGE_NAME:$COMMIT $TRAVIS_BUILD_DIR/api-service
   - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
   - docker push $IMAGE_NAME
