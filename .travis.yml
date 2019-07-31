@@ -21,10 +21,14 @@ script:
   - mvn clean test 
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
-  - export IMAGE_NAME=surenraju/api-service
-  - docker build -t $IMAGE_NAME:$COMMIT $TRAVIS_BUILD_DIR
-  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
-  - docker push $IMAGE_NAME
+  - export IMAGE_NAME_API_SERVICE=surenraju/api-service
+  - docker build -f $TRAVIS_BUILD_DIR/Dockerfile.api-service -t $IMAGE_NAME_API_SERVICE:$COMMIT $TRAVIS_BUILD_DIR
+  - docker tag $IMAGE_NAME_API_SERVICE:$COMMIT $IMAGE_NAME_API_SERVICE:$TAG
+  - docker push $IMAGE_NAME_API_SERVICE
+  - export IMAGE_NAME_INIT_SERVICE=surenraju/api-service
+  - docker build -f $TRAVIS_BUILD_DIR/Dockerfile.init-service -t $IMAGE_NAME_INIT_SERVICE:$COMMIT $TRAVIS_BUILD_DIR
+  - docker tag $IMAGE_NAME_INIT_SERVICE:$COMMIT $IMAGE_NAME_INIT_SERVICE:$TAG
+  - docker push $IMAGE_NAME_INIT_SERVICE
 
 after_success :
     - echo Post build activities
