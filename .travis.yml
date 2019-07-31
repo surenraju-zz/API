@@ -25,7 +25,7 @@ script:
   - docker build -f $TRAVIS_BUILD_DIR/Dockerfile.api-service -t $IMAGE_NAME_API_SERVICE:$COMMIT $TRAVIS_BUILD_DIR
   - docker tag $IMAGE_NAME_API_SERVICE:$COMMIT $IMAGE_NAME_API_SERVICE:$TAG
   - docker push $IMAGE_NAME_API_SERVICE
-  - export IMAGE_NAME_INIT_SERVICE=surenraju/api-service
+  - export IMAGE_NAME_INIT_SERVICE=surenraju/api-init-service
   - docker build -f $TRAVIS_BUILD_DIR/Dockerfile.init-service -t $IMAGE_NAME_INIT_SERVICE:$COMMIT $TRAVIS_BUILD_DIR
   - docker tag $IMAGE_NAME_INIT_SERVICE:$COMMIT $IMAGE_NAME_INIT_SERVICE:$TAG
   - docker push $IMAGE_NAME_INIT_SERVICE
