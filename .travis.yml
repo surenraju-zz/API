@@ -16,12 +16,12 @@ cache:
   
 script: 
   - mvn clean install 
-  - echo TRAVIS_BUILD_DIR
+  - echo $TRAVIS_BUILD_DIR
 
 after_success :
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - export IMAGE_NAME=surenraju/api-service
-  - docker build -t $IMAGE_NAME:$COMMIT $TRAVIS_BUILD_DIR/api-service
+  - docker build $IMAGE_NAME:$COMMIT $TRAVIS_BUILD_DIR/api-service
   - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
   - docker push $IMAGE_NAME
