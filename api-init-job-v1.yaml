@@ -4,17 +4,22 @@ metadata:
   name: apiinitjob
 spec:
   template:
+    metadata:
+      labels:
+        app: apiinitjob
+        version: v1.0.0
     spec:
       containers:
       - name: apiinitjob
         image: surenraju/api-init-service
         env:
-          # Use secret in real usage
         - name: SPRING_DATASOURCE_URL
           value: jdbc:mysql://mysql:3306/titanic
         - name: SPRING_DATASOURCE_USERNAME
           value: titanic
         - name: SPRING_DATASOURCE_PASSWORD
           value: Pass1234
+        - name: VERSION
+          value: v1.0.0
       restartPolicy: Never
   backoffLimit: 4
