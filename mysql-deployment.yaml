@@ -27,6 +27,7 @@ spec:
       containers:
       - image: surenraju/mysql-service
         name: mysql
+        imagePullPolicy: Always
         env:
           # Use secret in real usage
         - name: MYSQL_ROOT_PASSWORD
@@ -36,7 +37,7 @@ spec:
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
+          mountPath: /var/lib/mysqldata
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:

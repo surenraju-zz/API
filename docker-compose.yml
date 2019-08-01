@@ -38,7 +38,7 @@ services:
   api-service:
     image: surenraju/api-service
     environment: 
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/titanic
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/titanic
       - SPRING_DATASOURCE_USERNAME=titanic
       - SPRING_DATASOURCE_PASSWORD=Pass1234    
     ports:
@@ -47,3 +47,18 @@ services:
       default:
         aliases:
           - api-service
+          
+  api-init-service:
+    image: surenraju/api-init-service
+    environment: 
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/titanic
+      - SPRING_DATASOURCE_USERNAME=titanic
+      - SPRING_DATASOURCE_PASSWORD=Pass1234    
+    ports:
+      - "8081:8081"
+    networks:
+      default:
+        aliases:
+          - api-init-service
+          
+  
