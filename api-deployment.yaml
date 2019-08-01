@@ -1,11 +1,10 @@
-
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: basic-ingress
+  name: apiingress
 spec:
   backend:
-    serviceName: web
+    serviceName: apiservice
     servicePort: 8080
           
 
@@ -42,7 +41,7 @@ spec:
     spec:
       containers:
       - name: apiservice
-        image: surenraju/apiservice
+        image: surenraju/api-service
         env:
           # Use secret in real usage
         - name: SPRING_DATASOURCE_URL
